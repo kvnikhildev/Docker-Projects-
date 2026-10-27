@@ -1,0 +1,49 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Python testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Local database backups
+*.sql.gz
+*.dump
+*.backup
+
+# Local development overrides
+compose.override.yaml
+docker-compose.override.yml
+
+# Node.js dependencies, if added later
+node_modules/
+
+# Build artifacts
+dist/
+build/
