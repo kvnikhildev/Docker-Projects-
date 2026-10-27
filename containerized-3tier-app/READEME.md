@@ -137,13 +137,13 @@ If the project is hosted in a Git repository:
 
 ```bash
 git clone <your-repository-url>
-cd 3-tier
+cd containerized-3tier-app
 ```
 
 Alternatively, navigate to your existing project directory:
 
 ```bash
-cd ~/Desktop/Project-2026/3-tier
+cd ~/Desktop/Project-2026/containerized-3tier-app
 ```
 
 ### 2. Configure Environment Variables
