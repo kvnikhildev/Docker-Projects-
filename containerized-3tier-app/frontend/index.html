@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            width: 95%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .delete-button {
+            background: #dc2626;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #f3f4f6;
+        }
+
+        #message {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Employee Management System</h1>
+    <p>Three-Tier Web Application</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Add Employee</h2>
+
+        <form id="employeeForm">
+            <input
+                type="text"
+                id="name"
+                placeholder="Employee Name"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Employee Email"
+                required
+            >
+
+            <input
+                type="text"
+                id="department"
+                placeholder="Department"
+                required
+            >
+
+            <button type="submit">Add Employee</button>
+        </form>
+
+        <p id="message"></p>
+    </div>
+
+    <div class="card">
+        <h2>Employee List</h2>
+
+        <button onclick="loadEmployees()">Refresh Employees</button>
+
+        <br><br>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="employeeTable">
+                <tr>
+                    <td colspan="5">Loading employees...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    // Change this URL when you deploy the application.
+    // For local development, Flask runs on port 5000.   ------old 
+    // Send API requests through Nginx.
+    const API_URL = "/api/employees";
+
+    const form = document.getElementById("employeeForm");
+    const message = document.getElementById("message");
+
+    async function loadEmployees() {
+        const table = document.getElementById("employeeTable");
+
+        try {
+            const response = await fetch(API_URL);
+
+            if (!response.ok) {
+                throw new Error("Unable to retrieve employees.");
+            }
+
+            const employees = await response.json();
+
+            table.replaceChildren();
+
+            if (employees.length === 0) {
+                const row = table.insertRow();
+                const cell = row.insertCell();
+
+                cell.colSpan = 5;
+                cell.textContent = "No employees found.";
+
+                return;
+            }
+
+            employees.forEach(employee => {
+                const row = table.insertRow();
+
+                [
+                    employee.id,
+                    employee.name,
+                    employee.email,
+                    employee.department
+                ].forEach(value => {
+                    const cell = row.insertCell();
+                    cell.textContent = value;
+                });
+
+                const actionCell = row.insertCell();
+                const deleteButton = document.createElement("button");
+
+                deleteButton.textContent = "Delete";
+                deleteButton.className = "delete-button";
+
+                deleteButton.addEventListener("click", () => {
+                    deleteEmployee(employee.id);
+                });
+
+                actionCell.appendChild(deleteButton);
+            });
+
+        } catch (error) {
+            table.replaceChildren();
+
+            const row = table.insertRow();
+            const cell = row.insertCell();
+
+            cell.colSpan = 5;
+            cell.textContent = error.message;
+        }
+    }
+
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const employee = {
+            name: document.getElementById("name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            department: document.getElementById("department").value.trim()
+        };
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(employee)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Unable to add employee.");
+            }
+
+            message.style.color = "green";
+            message.textContent = "Employee added successfully!";
+
+            form.reset();
+
+            await loadEmployees();
+
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent = error.message;
+        }
+    });
+
+    async function deleteEmployee(id) {
+        if (!confirm("Are you sure you want to delete this employee?")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: "DELETE"
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Unable to delete employee.");
+            }
+
+            message.style.color = "green";
+            message.textContent = "Employee deleted successfully!";
+
+            await loadEmployees();
+
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent = error.message;
+        }
+    }
+
+    loadEmployees();
+</script>
+
+</body>
+</html>
