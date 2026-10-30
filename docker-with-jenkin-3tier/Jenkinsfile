@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-               checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'jenkin', url: 'https://github.com/kvnikhildev/Docker-Projects-.git']])
+               checkout scmGit(branches: [[name: '*/main']], browser: github('https://github.com'), extensions: [sparseCheckout([[path: 'docker-with-jenkin-3tier']])], userRemoteConfigs: [[credentialsId: 'jenkin', url: 'https://github.com/kvnikhildev/Docker-Projects-.git']])
             }
         }
     }
