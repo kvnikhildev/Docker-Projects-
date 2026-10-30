@@ -9,7 +9,9 @@ pipeline {
         }
         stage('install_dependency_frontend'){
             steps{
-                sh '''cd frontend
+                sh '''
+                ls
+                cd frontend
                 run npm install'''
             }
         }
