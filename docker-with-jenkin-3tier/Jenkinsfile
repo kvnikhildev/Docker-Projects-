@@ -7,5 +7,18 @@ pipeline {
                checkout scmGit(branches: [[name: '*/main']], browser: github('https://github.com'), extensions: [sparseCheckout([[path: 'docker-with-jenkin-3tier']])], userRemoteConfigs: [[credentialsId: 'jenkin', url: 'https://github.com/kvnikhildev/Docker-Projects-.git']])
             }
         }
+        stage('install_dependency_frontend'){
+            steps{
+                sh '''cd frontend
+                run npm install'''
+            }
+        }
+        stage('nstall_dependency_backend'){
+            step{
+                sh '''cd backend
+                run npm install'''
+            }
+        }
+
     }
 }
