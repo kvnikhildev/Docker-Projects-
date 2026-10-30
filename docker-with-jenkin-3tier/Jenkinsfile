@@ -11,13 +11,13 @@ pipeline {
             steps{
                 sh '''
                 ls
-                cd frontend
+                cd docker-with-jenkin-3tier/frontend
                 run npm install'''
             }
         }
         stage('install_dependency_backend'){
             steps{
-                sh '''cd backend
+                sh '''cd docker-with-jenkin-3tier/backend
                 run npm install'''
             }
         }
