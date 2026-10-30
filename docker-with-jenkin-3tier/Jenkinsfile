@@ -13,8 +13,8 @@ pipeline {
                 run npm install'''
             }
         }
-        stage('nstall_dependency_backend'){
-            step{
+        stage('install_dependency_backend'){
+            steps{
                 sh '''cd backend
                 run npm install'''
             }
