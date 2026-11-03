@@ -32,7 +32,7 @@ pipeline {
         stage('lint testing '){
             steps{
                 sh '''
-                cd docker-with-jenkin-3tier/backend
+                cd docker-with-jenkin-3tier/frontend
                 npm run lint
                 '''
 
