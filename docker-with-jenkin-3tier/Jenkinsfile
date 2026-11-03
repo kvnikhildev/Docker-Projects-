@@ -31,11 +31,17 @@ pipeline {
 
         stage('lint testing '){
             steps{
-                sh '''
-                cd docker-with-jenkin-3tier/frontend
-                npm run lint
-                '''
-
+                script {
+                    def lintStatus = sh(
+                        script: 'cd docker-with-jenkin-3tier/frontend npm run lint --format json --outputfile eslint eslint-report.json',
+                        returnStatus: true
+                    )
+                    archiveArtifacts artifacts: 'eslint-report.json',
+                    allowEmptyArchive:true
+                    if (lintStatus !=0) {
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                }
             }
         }
 
