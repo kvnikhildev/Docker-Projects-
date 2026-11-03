@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        ldocker{
+            image 'docker-jenkin-agent:v1'
+            args '-v jenkins-agent-workspace:/workspace'    
+        }
+    }
 
     stages {
         stage('build') {
@@ -7,18 +12,19 @@ pipeline {
                checkout scmGit(branches: [[name: '*/main']], browser: github('https://github.com'), extensions: [sparseCheckout([[path: 'docker-with-jenkin-3tier']])], userRemoteConfigs: [[credentialsId: 'jenkin', url: 'https://github.com/kvnikhildev/Docker-Projects-.git']])
             }
         }
+
         stage('install_dependency_frontend'){
             steps{
                 sh '''
                 ls
                 cd docker-with-jenkin-3tier/frontend
-                run npm install'''
+                npm install'''
             }
         }
         stage('install_dependency_backend'){
             steps{
                 sh '''cd docker-with-jenkin-3tier/backend
-                run npm install'''
+                npm install'''
             }
         }
 
