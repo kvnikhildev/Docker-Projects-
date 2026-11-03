@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker{
             image 'docker-jenkin-agent:v1'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
                
         }
     }
@@ -19,8 +19,6 @@ pipeline {
                 sh '''
                 ls
                 cd docker-with-jenkin-3tier/frontend
-                rm -rf node_modules
-                npm cache verify
                 npm install'''
             }
         }
@@ -28,6 +26,13 @@ pipeline {
             steps{
                 sh '''cd docker-with-jenkin-3tier/backend
                 npm install'''
+            }
+        }
+
+        stage('lint testing '){
+            steps{
+                sh 'npm run lint'
+
             }
         }
 
