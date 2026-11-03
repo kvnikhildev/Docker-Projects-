@@ -31,7 +31,10 @@ pipeline {
 
         stage('lint testing '){
             steps{
-                sh 'npm run lint'
+                sh '''
+                cd docker-with-jenkin-3tier/backend
+                npm run lint
+                '''
 
             }
         }
