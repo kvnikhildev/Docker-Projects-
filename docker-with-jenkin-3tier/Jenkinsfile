@@ -18,6 +18,8 @@ pipeline {
                 sh '''
                 ls
                 cd docker-with-jenkin-3tier/frontend
+                rm -rf node_modules
+                npm cache verify
                 npm install'''
             }
         }
