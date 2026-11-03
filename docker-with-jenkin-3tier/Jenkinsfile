@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker{
             image 'docker-jenkin-agent:v1'
-            args '-v jenkins-agent-workspace:/workspace'    
+               
         }
     }
 
