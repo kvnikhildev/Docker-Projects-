@@ -17,6 +17,9 @@
    
   },
   "devDependencies": {
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "jsdom": "^26.0.0",
+   "@testing-library/react": "^16.0.0",
+    "@testing-library/jest-dom": "^6.0.0"
   }
 }
