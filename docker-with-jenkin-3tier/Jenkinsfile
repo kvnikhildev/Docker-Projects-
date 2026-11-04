@@ -47,7 +47,7 @@ pipeline {
 
         stage('unit test -fronendend'){
             steps{
-               sh 'cd docker-with-jenkin-3tier/frontend && npm test'
+               sh 'cd docker-with-jenkin-3tier/frontend && npm run test'
             }
         }
 
