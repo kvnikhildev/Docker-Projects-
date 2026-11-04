@@ -29,19 +29,25 @@ pipeline {
             }
         }
 
-        stage('lint testing '){
+        stage('lint testing frontend'){
             steps{
                 script {
                     def lintStatus = sh(
-                        script: 'cd docker-with-jenkin-3tier/frontend && npm run lint -- --format json --output-file eslint-report.json',
+                        script: 'cd docker-with-jenkin-3tier/frontend && npm run lint -- --format json --output-file eslint-frontend-report.json',
                         returnStatus: true
                     )
-                    archiveArtifacts artifacts: 'docker-with-jenkin-3tier/frontend/eslint-report.json',
+                    archiveArtifacts artifacts: 'docker-with-jenkin-3tier/frontend/eslint-frontend-report.json',
                     allowEmptyArchive:true
                     if (lintStatus !=0) {
                         currentBuild.result = 'UNSTABLE'
                     }
                 }
+            }
+        }
+
+        stage('unit test -fronendend'){
+            steps{
+               sh 'cd docker-with-jenkin-3tier/frontend && npm test'
             }
         }
 
