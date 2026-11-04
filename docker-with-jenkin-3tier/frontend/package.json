@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest" 
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
