@@ -33,10 +33,10 @@ pipeline {
             steps{
                 script {
                     def lintStatus = sh(
-                        script: 'cd docker-with-jenkin-3tier/frontend && npm run lint --format json --output-file eslint eslint-report.json',
+                        script: 'cd docker-with-jenkin-3tier/frontend && npm run lint -- --format json --output-file eslint-report.json',
                         returnStatus: true
                     )
-                    archiveArtifacts artifacts: 'eslint-report.json',
+                    archiveArtifacts artifacts: 'docker-with-jenkin-3tier/frontend/eslint-report.json',
                     allowEmptyArchive:true
                     if (lintStatus !=0) {
                         currentBuild.result = 'UNSTABLE'
