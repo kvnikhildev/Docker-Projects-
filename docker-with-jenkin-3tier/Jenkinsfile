@@ -57,7 +57,7 @@ pipeline {
             post {
                 always{
                     emailext(
-                        to: 'kvnikhill@gmail.com'
+                        to: 'kvnikhill@gmail.com',
                         subject: "Frontend-lint-report #${BUILD_NUMBER}",
                         body:
                         """
