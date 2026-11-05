@@ -86,7 +86,9 @@ describe('Northstar Shop App', () => {
   it('opens the sign-in modal', () => {
     render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+    fireEvent.click(
+      screen.getAllByRole('button', { name: /sign in/i })[0]
+    );
 
     expect(
       screen.getByRole('heading', { name: 'Good to see you.' })
