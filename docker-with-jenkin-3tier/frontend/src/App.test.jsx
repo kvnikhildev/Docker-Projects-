@@ -123,16 +123,15 @@ describe('Northstar Shop App', () => {
       })
     ).toHaveTextContent('1');
   });
-
 // Test 5: Sign-in modal opens
 it('opens the sign-in modal', () => {
   render(<App />);
 
-  const signInButton = screen.getByRole('button', {
-    name: 'Sign in',
+  const signInButtons = screen.getAllByRole('button', {
+    name: /sign in/i,
   });
 
-  fireEvent.click(signInButton);
+  fireEvent.click(signInButtons[0]);
 
   expect(
     screen.getByRole('heading', {
