@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 
 import React from 'react';
-
 import {
   describe,
   it,
@@ -16,13 +15,12 @@ import {
   screen,
   fireEvent,
   waitFor,
+  within,
 } from '@testing-library/react';
 
 import '@testing-library/jest-dom/vitest';
-
 import App from './App';
 
-// Mock product data
 const mockProducts = [
   {
     id: 1,
@@ -41,7 +39,7 @@ describe('Northstar Shop App', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockImplementation(async (url) => {
-        if (url.includes('/products')) {
+        if (String(url).includes('/products')) {
           return {
             ok: true,
             json: async () => mockProducts,
@@ -68,32 +66,29 @@ describe('Northstar Shop App', () => {
     vi.clearAllMocks();
   });
 
-  // Test 1: Homepage renders
+  // Wait for product image to appear in the DOM.
+  const waitForProduct = async () => {
+    await waitFor(() => {
+      expect(
+        document.querySelector('img[alt="Everyday Bottle"]')
+      ).toBeInTheDocument();
+    });
+  };
+
   it('renders the application homepage', async () => {
     render(<App />);
 
     expect(
-      screen.getByRole('heading', {
-        name: /Good things/i,
-      })
+      screen.getByRole('heading', { name: /Good things/i })
     ).toBeInTheDocument();
 
-    expect(
-      await screen.findByRole('heading', {
-        name: 'Everyday Bottle',
-      })
-    ).toBeInTheDocument();
+    await waitForProduct();
   });
 
-  // Test 2: Products load from API
   it('loads products from the API', async () => {
     render(<App />);
 
-    expect(
-      await screen.findByRole('heading', {
-        name: 'Everyday Bottle',
-      })
-    ).toBeInTheDocument();
+    await waitForProduct();
 
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('/products'),
@@ -105,13 +100,10 @@ describe('Northstar Shop App', () => {
     );
   });
 
-  // Test 3: Shopping cart opens
   it('opens the shopping cart', async () => {
     render(<App />);
 
-    await screen.findByRole('heading', {
-      name: 'Everyday Bottle',
-    });
+    await waitForProduct();
 
     fireEvent.click(
       screen.getByRole('button', {
@@ -120,9 +112,7 @@ describe('Northstar Shop App', () => {
     );
 
     expect(
-      screen.getByRole('heading', {
-        name: /Your bag/i,
-      })
+      screen.getByRole('heading', { name: /Your bag/i })
     ).toBeInTheDocument();
 
     expect(
@@ -130,13 +120,10 @@ describe('Northstar Shop App', () => {
     ).toBeInTheDocument();
   });
 
-  // Test 4: Product can be added to cart
   it('adds a product to the shopping cart', async () => {
     render(<App />);
 
-    await screen.findByRole('heading', {
-      name: 'Everyday Bottle',
-    });
+    await waitForProduct();
 
     fireEvent.click(
       screen.getByRole('button', {
@@ -144,9 +131,9 @@ describe('Northstar Shop App', () => {
       })
     );
 
-    expect(
-      screen.getByRole('status')
-    ).toHaveTextContent('Everyday Bottle added to cart');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Everyday Bottle added to cart'
+    );
 
     expect(
       screen.getByRole('button', {
@@ -154,20 +141,22 @@ describe('Northstar Shop App', () => {
       })
     ).toHaveTextContent('1');
 
-    // Verify cart contents
     fireEvent.click(
       screen.getByRole('button', {
         name: /Open shopping cart/i,
       })
     );
 
+    const cart = document.querySelector('.drawer');
+
+    expect(cart).toBeInTheDocument();
+
     expect(
-      screen.getByText('Everyday Bottle')
+      within(cart).getByText('Everyday Bottle')
     ).toBeInTheDocument();
   });
 
-  // Test 5: Sign-in modal opens
-  it('opens the sign-in modal', () => {
+  it('opens the sign-in modal', async () => {
     render(<App />);
 
     const signInButtons = screen.getAllByRole('button', {
@@ -183,7 +172,9 @@ describe('Northstar Shop App', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByLabelText(/Email address/i)
+      screen.getByRole('textbox', {
+        name: /Email address/i,
+      })
     ).toBeInTheDocument();
 
     expect(
