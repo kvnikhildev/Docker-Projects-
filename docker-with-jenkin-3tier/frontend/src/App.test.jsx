@@ -1,4 +1,3 @@
-```jsx
 // @vitest-environment jsdom
 
 import React from 'react';
@@ -132,4 +131,3 @@ describe('Northstar Shop App', () => {
     ).toBeInTheDocument();
   });
 });
-```
