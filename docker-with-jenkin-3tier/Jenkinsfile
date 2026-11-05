@@ -47,9 +47,37 @@ pipeline {
 
         stage('unit test -fronendend'){
             steps{
-               sh 'cd docker-with-jenkin-3tier/frontend && npm run test'
+               sh 'cd docker-with-jenkin-3tier/frontend && npm run test -- --reporter=default --reporter=junit --outputFile.junit=reports/frontend-junit.xml'
             }
-        }
+        }       
 
     }
 }
+
+            post {
+                always{
+                    emailext(
+                        to: 'kvnikhill@gmail.com'
+                        subject: "Frontend-lint-report ${env.BUILD_NUMBER}",
+                        body:
+                        """
+                        Project: ${env.JOB_NAME},
+                        Build Number: ${env.BUILD_NUMBER},
+                        Build Status: ${currentBuild.currentResult},
+                        Build URL: ${env.BUILD_URL},
+                        """,
+                        attachmentsPattern:'docker-with-jenkin-3tier/frontend/reports/frontend-junit.xml'
+                        )
+                    success{
+                            echo 'pepeline is sucessfull'
+                        }
+                    failure{
+                            echo 'pipeline is faild'
+                        }
+                    unstable{
+                            echo 'unstable pipeline '
+                        }
+                    }
+            }
+            
+
