@@ -52,7 +52,9 @@ describe('Northstar Shop App', () => {
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByText('Everyday Bottle')
+      await screen.findByRole('img', {
+        name: 'Everyday Bottle',
+      })
     ).toBeInTheDocument();
   });
 
@@ -61,7 +63,9 @@ describe('Northstar Shop App', () => {
     render(<App />);
 
     expect(
-      await screen.findByText('Everyday Bottle')
+      await screen.findByRole('img', {
+        name: 'Everyday Bottle',
+      })
     ).toBeInTheDocument();
 
     expect(fetch).toHaveBeenCalledWith(
@@ -78,7 +82,9 @@ describe('Northstar Shop App', () => {
   it('opens the shopping cart', async () => {
     render(<App />);
 
-    await screen.findByText('Everyday Bottle');
+    await screen.findByRole('img', {
+      name: 'Everyday Bottle',
+    });
 
     fireEvent.click(
       screen.getByRole('button', {
@@ -87,7 +93,9 @@ describe('Northstar Shop App', () => {
     );
 
     expect(
-      screen.getByRole('heading', { name: /Your bag/i })
+      screen.getByRole('heading', {
+        name: /Your bag/i,
+      })
     ).toBeInTheDocument();
   });
 
@@ -95,7 +103,9 @@ describe('Northstar Shop App', () => {
   it('adds a product to the shopping cart', async () => {
     render(<App />);
 
-    await screen.findByText('Everyday Bottle');
+    await screen.findByRole('img', {
+      name: 'Everyday Bottle',
+    });
 
     fireEvent.click(
       screen.getByRole('button', {
@@ -118,11 +128,11 @@ describe('Northstar Shop App', () => {
   it('opens the sign-in modal', () => {
     render(<App />);
 
-    const signInButtons = screen.getAllByRole('button', {
-      name: /sign in/i,
-    });
-
-    fireEvent.click(signInButtons[0]);
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: /Sign in/i,
+      })
+    );
 
     expect(
       screen.getByRole('heading', {
