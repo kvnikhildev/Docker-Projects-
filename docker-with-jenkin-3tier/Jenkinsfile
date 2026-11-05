@@ -52,23 +52,24 @@ pipeline {
             }
         }       
 
-    }
+    
 
-    stage('Install_dependency_backend'){
-        steps{
-            sh """
-            cd docker-with-jenkin-3tier/backend && npm install 
-            """
-        }
-    stage('lint testing backend')
-        steps{
-            sh"""
-            cd docker-with-jenkin-3tier/backend
-            npm run lint
-            """
+        stage('Install_dependency_backend'){
+            steps{
+                sh """
+                cd docker-with-jenkin-3tier/backend && npm install 
+                """
+            }
+         }
+        stage('lint testing backend'){
+            steps{
+                sh"""
+                cd docker-with-jenkin-3tier/backend
+                npm run lint
+                """
+            }
         }
         
-
     }
     post {
         always{
