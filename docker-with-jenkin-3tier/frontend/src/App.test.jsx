@@ -124,20 +124,28 @@ describe('Northstar Shop App', () => {
     ).toHaveTextContent('1');
   });
 
-  // Test 5: Sign-in modal opens
-  it('opens the sign-in modal', () => {
-    render(<App />);
+// Test 5: Sign-in modal opens
+it('opens the sign-in modal', () => {
+  render(<App />);
 
-    fireEvent.click(
-      screen.getByRole('button', {
-        name: /Sign in/i,
-      })
-    );
-
-    expect(
-      screen.getByRole('heading', {
-        name: 'Good to see you.',
-      })
-    ).toBeInTheDocument();
+  const signInButton = screen.getByRole('button', {
+    name: 'Sign in',
   });
+
+  fireEvent.click(signInButton);
+
+  expect(
+    screen.getByRole('heading', {
+      name: 'Good to see you.',
+    })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByLabelText('Email address')
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByLabelText('Password')
+  ).toBeInTheDocument();
+});
 });
