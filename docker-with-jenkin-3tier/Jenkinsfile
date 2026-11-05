@@ -58,13 +58,13 @@ pipeline {
                 always{
                     emailext(
                         to: 'kvnikhill@gmail.com'
-                        subject: "Frontend-lint-report ${env.BUILD_NUMBER}",
+                        subject: "Frontend-lint-report #${BUILD_NUMBER}",
                         body:
                         """
                         Project: ${env.JOB_NAME},
-                        Build Number: ${env.BUILD_NUMBER},
+                        Build Number: ${BUILD_NUMBER},
                         Build Status: ${currentBuild.currentResult},
-                        Build URL: ${env.BUILD_URL},
+                        Build URL: ${BUILD_URL},
                         """,
                         attachmentsPattern:'docker-with-jenkin-3tier/frontend/reports/frontend-junit.xml'
                         )
