@@ -66,7 +66,6 @@ describe('Northstar Shop App', () => {
     vi.clearAllMocks();
   });
 
-  // Wait for product image to appear in the DOM.
   const waitForProduct = async () => {
     await waitFor(() => {
       expect(
@@ -105,11 +104,11 @@ describe('Northstar Shop App', () => {
 
     await waitForProduct();
 
-    fireEvent.click(
-      screen.getByRole('button', {
-        name: /Open shopping cart/i,
-      })
-    );
+    const cartButtons = screen.getAllByRole('button', {
+      name: /Open shopping cart/i,
+    });
+
+    fireEvent.click(cartButtons[0]);
 
     expect(
       screen.getByRole('heading', { name: /Your bag/i })
@@ -125,27 +124,25 @@ describe('Northstar Shop App', () => {
 
     await waitForProduct();
 
-    fireEvent.click(
-      screen.getByRole('button', {
-        name: /Add Everyday Bottle to bag/i,
-      })
-    );
+    // Find all matching add-to-cart buttons.
+    const addButtons = screen.getAllByRole('button', {
+      name: /Add Everyday Bottle to bag/i,
+    });
+
+    // Click the first matching button.
+    fireEvent.click(addButtons[0]);
 
     expect(screen.getByRole('status')).toHaveTextContent(
       'Everyday Bottle added to cart'
     );
 
-    expect(
-      screen.getByRole('button', {
-        name: /Open shopping cart/i,
-      })
-    ).toHaveTextContent('1');
+    const cartButtons = screen.getAllByRole('button', {
+      name: /Open shopping cart/i,
+    });
 
-    fireEvent.click(
-      screen.getByRole('button', {
-        name: /Open shopping cart/i,
-      })
-    );
+    expect(cartButtons[0]).toHaveTextContent('1');
+
+    fireEvent.click(cartButtons[0]);
 
     const cart = document.querySelector('.drawer');
 
