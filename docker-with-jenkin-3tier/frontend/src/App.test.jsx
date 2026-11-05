@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import React from 'react';
+
 import {
   describe,
   it,
@@ -10,11 +11,18 @@ import {
   vi,
 } from 'vitest';
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from '@testing-library/react';
+
 import '@testing-library/jest-dom/vitest';
 
 import App from './App';
 
+// Mock product data
 const mockProducts = [
   {
     id: 1,
@@ -32,15 +40,32 @@ describe('Northstar Shop App', () => {
 
     vi.stubGlobal(
       'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => mockProducts,
+      vi.fn().mockImplementation(async (url) => {
+        if (url.includes('/products')) {
+          return {
+            ok: true,
+            json: async () => mockProducts,
+          };
+        }
+
+        return {
+          ok: true,
+          json: async () => ({
+            token: 'test-token',
+            user: {
+              id: 1,
+              name: 'Test User',
+              email: 'test@example.com',
+            },
+          }),
+        };
       })
     );
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.clearAllMocks();
   });
 
   // Test 1: Homepage renders
@@ -48,11 +73,13 @@ describe('Northstar Shop App', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('heading', { name: /Good things/i })
+      screen.getByRole('heading', {
+        name: /Good things/i,
+      })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole('img', {
+      await screen.findByRole('heading', {
         name: 'Everyday Bottle',
       })
     ).toBeInTheDocument();
@@ -63,7 +90,7 @@ describe('Northstar Shop App', () => {
     render(<App />);
 
     expect(
-      await screen.findByRole('img', {
+      await screen.findByRole('heading', {
         name: 'Everyday Bottle',
       })
     ).toBeInTheDocument();
@@ -82,7 +109,7 @@ describe('Northstar Shop App', () => {
   it('opens the shopping cart', async () => {
     render(<App />);
 
-    await screen.findByRole('img', {
+    await screen.findByRole('heading', {
       name: 'Everyday Bottle',
     });
 
@@ -97,13 +124,17 @@ describe('Northstar Shop App', () => {
         name: /Your bag/i,
       })
     ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/Your bag is taking a little break/i)
+    ).toBeInTheDocument();
   });
 
   // Test 4: Product can be added to cart
   it('adds a product to the shopping cart', async () => {
     render(<App />);
 
-    await screen.findByRole('img', {
+    await screen.findByRole('heading', {
       name: 'Everyday Bottle',
     });
 
@@ -114,39 +145,49 @@ describe('Northstar Shop App', () => {
     );
 
     expect(
-      screen.getByText('Everyday Bottle added to cart')
-    ).toBeInTheDocument();
+      screen.getByRole('status')
+    ).toHaveTextContent('Everyday Bottle added to cart');
 
     expect(
       screen.getByRole('button', {
         name: /Open shopping cart/i,
       })
     ).toHaveTextContent('1');
+
+    // Verify cart contents
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: /Open shopping cart/i,
+      })
+    );
+
+    expect(
+      screen.getByText('Everyday Bottle')
+    ).toBeInTheDocument();
   });
 
-  
-// Test 5: Sign-in modal opens
-it('opens the sign-in modal', () => {
-  render(<App />);
+  // Test 5: Sign-in modal opens
+  it('opens the sign-in modal', () => {
+    render(<App />);
 
-  const signInButtons = screen.getAllByRole('button', {
-    name: /sign in/i,
+    const signInButtons = screen.getAllByRole('button', {
+      name: /sign in/i,
+    });
+
+    fireEvent.click(signInButtons[0]);
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'Good to see you.',
+      })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByLabelText(/Email address/i)
+    ).toBeInTheDocument();
+
+    expect(
+      document.querySelector('input[type="password"]')
+    ).toBeInTheDocument();
   });
-
-  fireEvent.click(signInButtons[0]);
-
-  expect(
-    screen.getByRole('heading', {
-      name: 'Good to see you.',
-    })
-  ).toBeInTheDocument();
-
-  expect(
-    screen.getByLabelText(/Email address/i)
-  ).toBeInTheDocument();
-
-  expect(
-    document.querySelector('input[type="password"]')
-  ).toBeInTheDocument();
-});
 });
