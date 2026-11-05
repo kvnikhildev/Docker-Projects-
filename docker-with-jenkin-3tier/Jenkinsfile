@@ -67,17 +67,18 @@ pipeline {
                     Build URL: ${BUILD_URL},
                     """,
                     attachmentsPattern:'docker-with-jenkin-3tier/frontend/reports/frontend-junit.xml')
-                success{
+        }
+                success {
                     echo 'pepeline is sucessfull'
                         }
-                failure{
+                failure {
                     echo 'pipeline is faild'
                         }
-                unstable{
-                    echo 'unstable pipeline '
-                        }
-                    }
-            }
+                unstable {
+                    echo 'unstable pipeline'
+                     }
+        
+    }
     
 }       
 
