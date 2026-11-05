@@ -52,7 +52,7 @@ pipeline {
         }       
 
     }
-}
+
 
             post {
                 always{
@@ -79,5 +79,6 @@ pipeline {
                         }
                     }
             }
+}
             
 
