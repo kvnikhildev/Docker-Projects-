@@ -44,7 +44,7 @@ pipeline {
                 }
             }
         }
-    }
+    
 
         stage('unit test -fronendend'){
             steps{
@@ -54,34 +54,30 @@ pipeline {
 
     }
 
-
-
-            post {
-                always{
-                    emailext(
-                        to: 'kvnikhill@gmail.com',
-                        subject: "Frontend-lint-report #${BUILD_NUMBER}",
-                        body:
-                        """
-                        Project: ${env.JOB_NAME},
-                        Build Number: ${BUILD_NUMBER},
-                        Build Status: ${currentBuild.currentResult},
-                        Build URL: ${BUILD_URL},
-                        """,
-                        attachmentsPattern:'docker-with-jenkin-3tier/frontend/reports/frontend-junit.xml'
-                        )
-                    success{
-                            echo 'pepeline is sucessfull'
+    post {
+        always{
+             emailext(
+                to: 'kvnikhill@gmail.com',
+                subject: "Frontend-lint-report #${BUILD_NUMBER}",
+                body:
+                    """
+                    roject: ${env.JOB_NAME},
+                    Build Number: ${BUILD_NUMBER},
+                    Build Status: ${currentBuild.currentResult},
+                    Build URL: ${BUILD_URL},
+                    """,
+                    attachmentsPattern:'docker-with-jenkin-3tier/frontend/reports/frontend-junit.xml')
+                success{
+                    echo 'pepeline is sucessfull'
                         }
-                    failure{
-                            echo 'pipeline is faild'
+                failure{
+                    echo 'pipeline is faild'
                         }
-                    unstable{
-                            echo 'unstable pipeline '
+                unstable{
+                    echo 'unstable pipeline '
                         }
                     }
             }
     
-}
-            
+}       
 
