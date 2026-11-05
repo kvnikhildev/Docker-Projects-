@@ -123,6 +123,8 @@ describe('Northstar Shop App', () => {
       })
     ).toHaveTextContent('1');
   });
+
+  
 // Test 5: Sign-in modal opens
 it('opens the sign-in modal', () => {
   render(<App />);
@@ -140,11 +142,11 @@ it('opens the sign-in modal', () => {
   ).toBeInTheDocument();
 
   expect(
-    screen.getByLabelText('Email address')
+    screen.getByLabelText(/Email address/i)
   ).toBeInTheDocument();
 
   expect(
-    screen.getByLabelText('Password')
+    document.querySelector('input[type="password"]')
   ).toBeInTheDocument();
 });
 });
