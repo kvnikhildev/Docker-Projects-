@@ -53,7 +53,10 @@ export async function initializeDatabase() {
       ('Everyday Backpack', 'A durable everyday backpack with a padded laptop sleeve.', 4999, 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900', 25),
       ('Wireless Headphones', 'Comfortable over-ear headphones for work and travel.', 7999, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900', 18),
       ('Classic Watch', 'A clean, versatile watch for everyday wear.', 10999, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900', 12),
-      ('Ceramic Mug', 'A simple ceramic mug for your morning coffee.', 1599, 'https://images.unsplash.com/photo-1514228742587-6b1558f0e?auto=format&fit=crop&w=900', 40)
+      ('Ceramic Mug', 'A simple ceramic mug for your morning coffee.', 1599, https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900', 12)
     `);
   }
 }
+
+
+//'https://images.unsplash.com/photo-1514228742587-6b1558f0e?auto=format&fit=crop&w=900', 40)
