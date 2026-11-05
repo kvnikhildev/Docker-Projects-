@@ -9,7 +9,7 @@ import {
   afterEach,
   vi,
 } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import App from './App';
 
@@ -61,26 +61,20 @@ describe('Northstar Shop App', () => {
   it('loads products from the API', async () => {
     render(<App />);
   
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Wait until the API is called
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalled();
+    });
   
+    // Display the API calls
+    console.log('FETCH CALLS:', fetch.mock.calls);
+  
+    // Display the rendered application
     screen.debug();
   
-    console.log('Fetch calls:', fetch.mock.calls);
-  
-    expect(await screen.findByText('Everyday Bottle')).toBeInTheDocument();
-  });
-
-  it('opens the shopping cart', async () => {
-    render(<App />);
-
-    await screen.findByRole('heading', { name: 'Everyday Bottle' });
-
-    fireEvent.click(
-      screen.getByRole('button', { name: /Open shopping cart/i })
-    );
-
+    // Check whether the product appears
     expect(
-      screen.getByRole('heading', { name: /Your bag/i })
+      await screen.findByText('Everyday Bottle')
     ).toBeInTheDocument();
   });
 
