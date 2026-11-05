@@ -27,7 +27,27 @@ export default function App() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    request('/products').then(setProducts).catch(e => setMessage(e.message));
+    let active = true;
+  
+    async function loadProducts() {
+      try {
+        const data = await request('/products');
+  
+        if (active) {
+          setProducts(Array.isArray(data) ? data : data.products || []);
+        }
+      } catch (error) {
+        if (active) {
+          setMessage(error.message);
+        }
+      }
+    }
+  
+    loadProducts();
+  
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
