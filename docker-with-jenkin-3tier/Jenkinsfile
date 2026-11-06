@@ -73,15 +73,15 @@ pipeline {
             steps{
                 sh """
                 cd docker-with-jenkin-3tier/frontend 
-                docker build -t frontend:v${BUILD.NUMBER} .
+                docker build -t frontend:v${BUILD_NUMBER} .
                 """
             }
         }
-        stage('doocker image build backend'){
+        stage('docker image build backend'){
             steps{
             sh"""
             cd docker-with-jenkin-3tier/backend
-            docker build -t backend:v${BUILD.NUMBER} .
+            docker build -t backend:v${BUILD_NUMBER} .
             """
             }
         }
