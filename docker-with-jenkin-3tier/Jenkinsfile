@@ -67,9 +67,27 @@ pipeline {
                     }
                 }
              }
-        
         }
+
+        stage('docker image build frontend'){
+            steps{
+                sh """
+                cd docker-with-jenkin-3tier/frontend 
+                docker build -t frontend:v${BUILD.NUMBER} .
+                """
+            }
+        }
+        stage('doocker image build backend'){
+            steps{
+            sh"""
+            cd docker-with-jenkin-3tier/backend
+            docker build -t backend:v${BUILD.NUMBER} .
+            """
+            }
+        }
+        
     }
+
         
     post {
         always{
