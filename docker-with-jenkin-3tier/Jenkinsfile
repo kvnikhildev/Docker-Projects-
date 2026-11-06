@@ -73,7 +73,7 @@ pipeline {
             steps{
                 sh """
                 cd docker-with-jenkin-3tier/frontend 
-                docker build -t frontend:v${BUILD_NUMBER} .
+                docker build -t northstar-frontend:v${BUILD_NUMBER} .
                 """
             }
         }
@@ -81,9 +81,22 @@ pipeline {
             steps{
             sh"""
             cd docker-with-jenkin-3tier/backend
-            docker build -t backend:v${BUILD_NUMBER} .
+            docker build -t northstar-backend:v${BUILD_NUMBER} .
             """
             }
+        }
+        stage('push frontend docker image to docekr registry'){
+            steps{
+                withCredentials([string(credentialsId: 'cicd-push', variable: 'REGISTRY-SECRET')]) {
+                    sh """
+                    docker login --username kvnikhill --password-stdin ${REGISTRY-SECRET}
+                    docker push kvnihkill/northstar-frontend:v${BUILD_NUMBER}
+                    docker push kvnikhill/northstar-backend:v${BUILD_NUMBER}
+
+                    """
+                }
+            }   
+
         }
         
     }
@@ -92,7 +105,7 @@ pipeline {
     post {
         always{
              emailext(
-                to: 'kvnikhill@gmail.com',
+                to: 'nikhilkaviledev@gmail.com',
                 subject: "Jenkin Report #${BUILD_NUMBER}",
                 body:
                     """
