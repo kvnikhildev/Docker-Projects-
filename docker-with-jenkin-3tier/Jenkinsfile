@@ -33,7 +33,7 @@ pipeline {
             steps{
                 script {
                     def lint_frontend = sh(
-                        script: 'cd docker-with-jenkin-3tier/frontend && npm run lint -- --format json --output-file eslint-frontend-report.json',
+                        script: 'cd docker-with-jenkin-3tier/frontend && npm run lint -- --format=json --output-file eslint-frontend-report.json',
                         returnStatus: true
                     )
                     archiveArtifacts (
@@ -46,8 +46,7 @@ pipeline {
             }
         }
     
-
-        stage('unit test -fronendend'){
+        stage('Unit Test Frontend'){
             steps{
                sh 'cd docker-with-jenkin-3tier/frontend && mkdir -p reports && npm run test -- --reporter=default --reporter=junit --outputFile.junit=reports/frontend-junit.xml'
             }
@@ -69,35 +68,26 @@ pipeline {
              }
         }
 
-        stage('docker image build frontend'){
-            steps{
-                sh """
-                cd docker-with-jenkin-3tier/frontend 
-                docker build -t northstar-frontend:v${BUILD_NUMBER} .
-                """
+        stage('push and push frontend docker image to docekr registry'){
+            environment {
+                DOCKER_IMAGE = "kvnikhill/northstar-frontend:v${BUILD_NUMBER}"
+                DOCKER_URL =  "https://index.docker.io/v1/"
             }
-        }
-        stage('docker image build backend'){
             steps{
-            sh"""
-            cd docker-with-jenkin-3tier/backend
-            docker build -t northstar-backend:v${BUILD_NUMBER} .
-            """
-            }
-        }
-        stage('push frontend docker image to docekr registry'){
-            steps{
-                withCredentials([string(credentialsId: 'cicd-push', variable: 'REGISTRY-SECRET')]) {
-                    sh """
-                    docker login --username kvnikhill --password-stdin ${REGISTRY-SECRET}
-                    docker push kvnihkill/northstar-frontend:v${BUILD_NUMBER}
-                    docker push kvnikhill/northstar-backend:v${BUILD_NUMBER}
+                script {
+                    
+                    sh 'cd docker-with-jenkin-3tier/frontend && docker build -t ${DOCKER_IMAGE} .'
+                    def dockerImage = docker.image("${DOCKER_IMAGE}")
+                    docker.withRegistry(env.DOCKER_URL, 'cicd-push'){
+                    dockerImage.push() 
+                    }
 
-                    """
                 }
-            }   
-
-        }
+                    
+             
+            }
+                          
+        }     
         
     }
 
