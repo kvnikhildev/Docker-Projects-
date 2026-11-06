@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "lint": "eslint .",
-    
+    "lint": "eslint ." 
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
