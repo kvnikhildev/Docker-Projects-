@@ -32,13 +32,14 @@ pipeline {
         stage('lint testing frontend'){
             steps{
                 script {
-                    def lintStatus = sh(
+                    def lint_frontend = sh(
                         script: 'cd docker-with-jenkin-3tier/frontend && npm run lint -- --format json --output-file eslint-frontend-report.json',
                         returnStatus: true
                     )
-                    archiveArtifacts artifacts: 'docker-with-jenkin-3tier/frontend/eslint-frontend-report.json',
-                    allowEmptyArchive:true
-                    if (lintStatus !=0) {
+                    archiveArtifacts (
+                    artifacts: 'docker-with-jenkin-3tier/frontend/eslint-frontend-report.json',
+                    allowEmptyArchive:true)
+                    if (lint_frontend !=0) {
                         currentBuild.result = 'UNSTABLE'
                     }
                 }
@@ -48,24 +49,33 @@ pipeline {
 
         stage('unit test -fronendend'){
             steps{
-               sh 'cd docker-with-jenkin-3tier/frontend && npm run test -- --reporter=default --reporter=junit --outputFile.junit=reports/frontend-junit.xml'
+               sh 'cd docker-with-jenkin-3tier/frontend && mkdir reports && npm run test -- --reporter=default --reporter=junit --outputFile.junit=reports/frontend-junit.xml'
             }
         }       
 
         stage('lint testing backend'){
             steps{
-                sh"""
-                cd docker-with-jenkin-3tier/backend && npm run lint
-                """
-            }
-        }
+                script {
+                    def eslint_backend = sh(
+                        script: 'cd docker-with-jenkin-3tier/backend && npm run lint -- --format=json --output-file eslint-backend-report.json' ,
+                        returnStatus: true )
+                        archiveArtifacts (
+                        artifacts: 'docker-with-jenkin-3tier/backend/eslint-backend-report.json',
+                        allowEmptyArchive: true)
+                    if (eslint_backend != 0){
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                }
+             }
         
+        }
     }
+        
     post {
         always{
              emailext(
                 to: 'kvnikhill@gmail.com',
-                subject: "Frontend-lint-report #${BUILD_NUMBER}",
+                subject: "Jenkin Report #${BUILD_NUMBER}",
                 body:
                     """
                     roject: ${env.JOB_NAME},
@@ -73,19 +83,20 @@ pipeline {
                     Build Status: ${currentBuild.currentResult},
                     Build URL: ${BUILD_URL},
                     """,
-                    attachmentsPattern:'docker-with-jenkin-3tier/frontend/reports/frontend-junit.xml')
+                    attachmentsPattern:'docker-with-jenkin-3tier/frontend/reports/frontend-junit.xml ,docker-with-jenkin-3tier/frontend/eslint-frontend-report.json, docker-with-jenkin-3tier/backend/eslint-backend-report.json')
         }
                 success {
                     echo 'pepeline is sucessfull'
-                        }
+                }
                 failure {
                     echo 'pipeline is faild'
-                        }
+                }
                 unstable {
                     echo 'unstable pipeline'
-                     }
+                }
         
     }
+}
     
-}       
+      
 
