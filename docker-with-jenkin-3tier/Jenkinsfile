@@ -49,7 +49,7 @@ pipeline {
 
         stage('unit test -fronendend'){
             steps{
-               sh 'cd docker-with-jenkin-3tier/frontend && mkdir reports && npm run test -- --reporter=default --reporter=junit --outputFile.junit=reports/frontend-junit.xml'
+               sh 'cd docker-with-jenkin-3tier/frontend && mkdir -p reports && npm run test -- --reporter=default --reporter=junit --outputFile.junit=reports/frontend-junit.xml'
             }
         }       
 
@@ -78,7 +78,7 @@ pipeline {
                 subject: "Jenkin Report #${BUILD_NUMBER}",
                 body:
                     """
-                    roject: ${env.JOB_NAME},
+                    Project: ${env.JOB_NAME},
                     Build Number: ${BUILD_NUMBER},
                     Build Status: ${currentBuild.currentResult},
                     Build URL: ${BUILD_URL},
