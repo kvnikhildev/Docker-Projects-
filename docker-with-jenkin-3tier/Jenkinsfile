@@ -76,9 +76,9 @@ pipeline {
             steps{
                 script {
                     
-                    sh 'cd docker-with-jenkin-3tier/frontend && docker build -t ${DOCKER_IMAGE} .'
+                    sh 'cd docker-with-jenkin-3tier/frontend && docker build -t $DOCKER_IMAGE .'
                     def dockerImage = docker.image("${DOCKER_IMAGE}")
-                    docker.withRegistry(env.DOCKER_URL, ${'cicd-push'}){
+                    docker.withRegistry(env.DOCKER_URL, 'cicd-push'){
                     dockerImage.push() 
                     }
 
