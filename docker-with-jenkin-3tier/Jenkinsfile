@@ -90,12 +90,12 @@ pipeline {
         }  
         stage('push backend docker image to docker registry'){
             environment{
-                DOCKER_BACK_IMAGE = "kvnikhill/northstart-backend:v${BUILD_NUMBER}"
+                DOCKER_BKND_IMAGE = "kvnikhill/northstart-backend:v${BUILD_NUMBER}"
                 
             }
             steps{
                 script {
-                    sh 'cd docker-with-jenkin-3tier/backend && docker build -t ${DOCKER_BKND_IMAGE} .'
+                    sh 'cd docker-with-jenkin-3tier/backend && docker build -t $DOCKER_BKND_IMAGE .'
                     def backendImage = docker.image("${DOCKER_BKND_IMAGE}")
                     withDockerRegistry(credentialsId: 'cicd-push', url: 'https://index.docker.io/v1/') {
                      backendImage.push()
