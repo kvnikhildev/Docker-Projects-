@@ -5,6 +5,31 @@ services:
     container_name: student-app
     ports:
       - "3000:3000"
-      
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/student_management
+      - SESSION_SECRET=${SESSION_SECRET}
+      - ADMIN_NAME=${ADMIN_NAME}
+      - ADMIN_EMAIL=${ADMIN_EMAI}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    depends_on:
+      mongo:
+        condition: service_healthy
+  
+  mongo:
+    image: mongo:4.2.0
+    container_name: student-db
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand({ping:1})"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    expose:
+      - 27017
+
+volumes:
+  mongo_data:
+    
 
 
