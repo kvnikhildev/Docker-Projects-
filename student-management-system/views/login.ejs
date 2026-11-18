@@ -1,0 +1,15 @@
+<%- include("partials/header", { title }) %>
+<section class="auth-wrap">
+  <div class="card auth-card">
+    <p class="eyebrow">ADMIN PORTAL</p>
+    <h1>Welcome back</h1>
+    <p class="muted">Sign in to manage student records.</p>
+    <form action="/login" method="POST" class="form">
+      <label>Email address<input type="email" name="email" required autocomplete="username" placeholder="admin@example.com"></label>
+      <label>Password<input type="password" name="password" required autocomplete="current-password" placeholder="Your password"></label>
+      <button class="btn btn-primary full" type="submit">Sign in</button>
+    </form>
+    <p class="hint">First-time login details are configured in your <code>.env</code> file.</p>
+  </div>
+</section>
+<%- include("partials/footer") %>

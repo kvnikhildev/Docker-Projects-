@@ -1,0 +1,31 @@
+<%- include("../partials/header", { title }) %>
+<div class="page-heading">
+  <div><p class="eyebrow">ACADEMIC DIRECTORY</p><h1>Students</h1><p class="muted"><%= total %> student record<%= total === 1 ? "" : "s" %> in the system</p></div>
+  <a class="btn btn-primary" href="/students/new">＋ Add student</a>
+</div>
+<section class="card">
+  <form class="search-row" action="/students" method="GET">
+    <input type="search" name="search" value="<%= search %>" placeholder="Search by name, ID, email or course…">
+    <button class="btn btn-dark" type="submit">Search</button>
+    <% if (search) { %><a class="btn btn-light" href="/students">Clear</a><% } %>
+  </form>
+  <% if (students.length) { %>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Student ID</th><th>Name</th><th>Email</th><th>Course</th><th>Year</th><th>Actions</th></tr></thead>
+    <tbody>
+    <% students.forEach(student => { %>
+      <tr>
+        <td><span class="id-pill"><%= student.studentId %></span></td>
+        <td class="strong"><%= student.firstName %> <%= student.lastName %></td>
+        <td><%= student.email %></td><td><%= student.course %></td><td><span class="year-pill">Year <%= student.year %></span></td>
+        <td><div class="actions"><a href="/students/<%= student._id %>">View</a><a href="/students/<%= student._id %>/edit">Edit</a>
+        <form action="/students/<%= student._id %>/delete" method="POST" onsubmit="return confirm('Delete this student record?')"><button class="link-danger" type="submit">Delete</button></form></div></td>
+      </tr>
+    <% }) %>
+    </tbody>
+  </table></div>
+  <% } else { %>
+    <div class="empty"><div class="empty-icon">◎</div><h2>No students found</h2><p class="muted"><%= search ? "Try another search term." : "Add your first student to get started." %></p><% if (!search) { %><a class="btn btn-primary" href="/students/new">Add first student</a><% } %></div>
+  <% } %>
+</section>
+<%- include("../partials/footer") %>

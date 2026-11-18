@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | Student Management</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/students">CampusDesk</a>
+  <% if (currentUser) { %>
+    <div class="nav-right">
+      <span class="welcome">Hello, <%= currentUser.name %></span>
+      <form action="/logout" method="POST"><button class="btn btn-outline btn-small" type="submit">Log out</button></form>
+    </div>
+  <% } %>
+</header>
+<main class="container">
+  <% if (success) { %><div class="alert success"><%= success %></div><% } %>
+  <% if (error) { %><div class="alert error"><%= error %></div><% } %>

@@ -1,0 +1,15 @@
+<%- include("../partials/header", { title }) %>
+<div class="page-heading"><div><p class="eyebrow">STUDENT PROFILE</p><h1><%= student.firstName %> <%= student.lastName %></h1><p class="muted">Student ID: <%= student.studentId %></p></div><div class="heading-actions"><a class="btn btn-light" href="/students">← Back</a><a class="btn btn-primary" href="/students/<%= student._id %>/edit">Edit student</a></div></div>
+<section class="card profile-card">
+  <div class="profile-top"><div class="avatar"><%= student.firstName.charAt(0).toUpperCase() %><%= student.lastName.charAt(0).toUpperCase() %></div><div><h2><%= student.firstName %> <%= student.lastName %></h2><span class="id-pill"><%= student.studentId %></span></div></div>
+  <div class="detail-grid">
+    <div><span>Email</span><strong><%= student.email %></strong></div>
+    <div><span>Phone</span><strong><%= student.phone || "Not provided" %></strong></div>
+    <div><span>Course</span><strong><%= student.course %></strong></div>
+    <div><span>Academic year</span><strong>Year <%= student.year %></strong></div>
+    <div><span>Date of birth</span><strong><%= student.dateOfBirth ? new Date(student.dateOfBirth).toLocaleDateString() : "Not provided" %></strong></div>
+    <div><span>Address</span><strong><%= student.address || "Not provided" %></strong></div>
+  </div>
+  <p class="record-date">Record created <%= new Date(student.createdAt).toLocaleString() %></p>
+</section>
+<%- include("../partials/footer") %>

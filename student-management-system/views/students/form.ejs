@@ -1,0 +1,19 @@
+<%- include("../partials/header", { title }) %>
+<div class="page-heading"><div><p class="eyebrow">STUDENT RECORD</p><h1><%= isEdit ? "Edit student" : "Add a student" %></h1><p class="muted">Enter the student's details below.</p></div><a class="btn btn-light" href="/students">← Back to students</a></div>
+<section class="card form-card">
+<form action="<%= isEdit ? `/students/${student._id}/update` : '/students' %>" method="POST" class="form">
+  <div class="form-grid">
+    <label>Student ID *<input name="studentId" required value="<%= student.studentId || '' %>" placeholder="e.g. STU-1001"></label>
+    <label>First name *<input name="firstName" required value="<%= student.firstName || '' %>"></label>
+    <label>Last name *<input name="lastName" required value="<%= student.lastName || '' %>"></label>
+    <label>Email address *<input type="email" name="email" required value="<%= student.email || '' %>"></label>
+    <label>Phone number<input name="phone" value="<%= student.phone || '' %>" placeholder="+971…"></label>
+    <label>Course / Program *<input name="course" required value="<%= student.course || '' %>" placeholder="e.g. Computer Science"></label>
+    <label>Academic year *<select name="year" required><option value="">Select year</option><% for(let i=1;i<=8;i++){ %><option value="<%= i %>" <%= Number(student.year) === i ? "selected" : "" %>>Year <%= i %></option><% } %></select></label>
+    <label>Date of birth<input type="date" name="dateOfBirth" value="<%= student.dateOfBirth ? new Date(student.dateOfBirth).toISOString().slice(0,10) : '' %>"></label>
+    <label class="span-2">Address<textarea name="address" rows="3" placeholder="Street, city, country"><%= student.address || '' %></textarea></label>
+  </div>
+  <div class="form-actions"><a class="btn btn-light" href="/students">Cancel</a><button class="btn btn-primary" type="submit"><%= isEdit ? "Save changes" : "Create student" %></button></div>
+</form>
+</section>
+<%- include("../partials/footer") %>

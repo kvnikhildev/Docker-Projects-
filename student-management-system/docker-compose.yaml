@@ -1,0 +1,10 @@
+services:
+
+  app:
+    build: .
+    container_name: student-app
+    ports:
+      - "3000:3000"
+      
+
+
